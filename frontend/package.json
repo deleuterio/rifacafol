@@ -1,0 +1,21 @@
+{
+  "name": "rifas-nuxtjs",
+  "version": "1.0.0",
+  "description": "My astonishing Nuxt.js project to create raffles",
+  "author": "deleuterio",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt generate",
+    "start": "nuxt start"
+  },
+  "dependencies": {
+    "nuxt": "^2.0.0",
+    "vuelidate": "^0.7.6"
+  },
+  "devDependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/vuetify": "^1.11.2",
+    "nodemon": "^1.18.9"
+  }
+}

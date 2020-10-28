@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 export default {
-  mode: 'spa',
+  ssr: true,
+  target: 'static',
   /*
    ** Headers of the page
    */
@@ -15,6 +18,7 @@ export default {
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [{ src: `https://paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}&currency=BRL` }]
   },
   /*
    ** Customize the progress-bar color
@@ -27,7 +31,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/vuelidate'],
   /*
    ** Nuxt.js modules
    */
@@ -41,4 +45,5 @@ export default {
      */
     extend(config, ctx) {},
   },
+  buildModules: ['@nuxtjs/vuetify']
 };
