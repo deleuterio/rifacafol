@@ -1,95 +1,68 @@
 <template>
-<v-stepper v-model="e1">
-    <v-stepper-header>
-      <v-stepper-step
-        :complete="e1 > 1"
-        step="1"
-      >
-        Name of step 1
-      </v-stepper-step>
+  <v-app>
+    <v-main>
+      <v-container>
+        <v-stepper v-model="step">
+          <v-stepper-header>
+            <v-stepper-step :complete="step > 1" step="1">
+              Identificação
+            </v-stepper-step>
 
-      <v-divider></v-divider>
+            <v-divider></v-divider>
 
-      <v-stepper-step
-        :complete="e1 > 2"
-        step="2"
-      >
-        Name of step 2
-      </v-stepper-step>
+            <v-stepper-step :complete="step > 2" step="2">
+              Pagamento
+            </v-stepper-step>
 
-      <v-divider></v-divider>
+            <v-divider></v-divider>
 
-      <v-stepper-step step="3">
-        Name of step 3
-      </v-stepper-step>
-    </v-stepper-header>
+            <v-stepper-step step="3"> Números </v-stepper-step>
+          </v-stepper-header>
 
-    <v-stepper-items>
-      <v-stepper-content step="1">
-        <v-card
-          class="mb-12"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
+          <v-stepper-items>
+            <v-stepper-content step="1">
+              <Identity v-model="form" />
+              <v-btn color="primary" @click="step = 2" :disabled="!form.isValid"> Seguir </v-btn>
+            </v-stepper-content>
 
-        <v-btn
-          color="primary"
-          @click="e1 = 2"
-        >
-          Continue
-        </v-btn>
+            <v-stepper-content step="2">
+              <Payment />
 
-        <v-btn text>
-          Cancel
-        </v-btn>
-      </v-stepper-content>
+              <v-btn color="primary" @click="step = 3"> Continue </v-btn>
 
-      <v-stepper-content step="2">
-        <v-card
-          class="mb-12"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
+              <v-btn text> Cancel </v-btn>
+            </v-stepper-content>
 
-        <v-btn
-          color="primary"
-          @click="e1 = 3"
-        >
-          Continue
-        </v-btn>
+            <v-stepper-content step="3">
+              <v-card
+                class="mb-12"
+                color="grey lighten-1"
+                height="200px"
+              ></v-card>
 
-        <v-btn text>
-          Cancel
-        </v-btn>
-      </v-stepper-content>
+              <v-btn color="primary" @click="step = 1"> Continue </v-btn>
 
-      <v-stepper-content step="3">
-        <v-card
-          class="mb-12"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
-
-        <v-btn
-          color="primary"
-          @click="e1 = 1"
-        >
-          Continue
-        </v-btn>
-
-        <v-btn text>
-          Cancel
-        </v-btn>
-      </v-stepper-content>
-    </v-stepper-items>
-  </v-stepper>
+              <v-btn text> Cancel </v-btn>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import * as validators from "vuelidate/lib/validators";
+import Identity from "./steps/Identity";
+import Payment from "./steps/Payment";
 export default {
+  components: { Identity, Payment },
   data() {
     return {
+      step: 1,
+      form: {
+        valid: false,
+        data: {}
+      }
     };
   },
 };
