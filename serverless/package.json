@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "start:dev": "node bin/http.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
