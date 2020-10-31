@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start:dev": "node bin/http.js",
+    "start:dev": "nodemon bin/http.js --inspect 9229",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "eslint": "^5.14.1",
     "eslint-plugin-prettier": "^3.0.1",
     "jsdoc": "^3.5.5",
+    "nodemon": "^2.0.6",
     "prettier": "1.16.4"
   },
   "dependencies": {
