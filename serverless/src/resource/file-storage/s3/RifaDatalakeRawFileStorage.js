@@ -18,6 +18,7 @@ class RifaDatalakeRawFileStorage extends S3 {
      */
     constructor() {
         super({ bucket: config.BUCKET_RIFA_DATALAKE_RAW });
+        this.tempFolder = '/tmp';
     }
 
     /**
@@ -40,8 +41,12 @@ class RifaDatalakeRawFileStorage extends S3 {
      */
     async deleteJSONfile(filename) {
         const path = `${this.tempFolder}/${filename}`;
-        await fsPromises.unlink(path);
-        return true;
+        try {
+            await fsPromises.unlink(path);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 

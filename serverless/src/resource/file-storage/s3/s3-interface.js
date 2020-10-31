@@ -2,6 +2,10 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
+/*Class dependencies*/
+const config = require('../../../shared/config');
+/*Class dependencies end*/
+
 /**
  * @class
  * @description An interface to implemnt methods to use aws-sdk s3 functions
@@ -31,9 +35,9 @@ class S3 {
      * @returns {Object} An object with operation status code, file url, the s3 key, the s3 bucket, the file size and mime type
      */
     async upload({ filePath, key, mime }) {
-        // if (config.NODE_ENV === 'local') {
-        //     return { statusCode: 200, key, mime, bucket: this.bucket };
-        // } else {
+        if (config.NODE_ENV === 'local') {
+            return { statusCode: 200, key, mime, bucket: this.bucket };
+        } else {
             const s3Obj = await this.s3
                 .putObject({
                     Bucket: this.bucket,
@@ -45,7 +49,7 @@ class S3 {
 
             const { statusCode } = s3Obj.$response.httpResponse;
             return { statusCode, url, key, mime, bucket: this.bucket };
-        // }
+        }
     }
 
     async get({ key, filePath }) {
