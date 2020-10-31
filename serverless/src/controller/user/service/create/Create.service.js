@@ -5,7 +5,7 @@ class UserCreateService {
         this.remoteKey = 'user';
     }
 
-    execute({ user }) {
+    async execute({ user }) {
         const userId = this.uuidv4();
         const userDTO = { userId, ...user };
         await this._createUser({ filename: userId, data: userDTO });
@@ -19,10 +19,9 @@ class UserCreateService {
      */
     async _createUser({ filename, data }) {
         const mime = 'json';
-        const filename = `${filename}.${mime}`;
 
         try {
-            const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(filename, data);
+            const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(`${filename}.${mime}`, data);
             return await this.rifaDatalakeRawFileStorage.upload({ filePath, key: this.remoteKey, mime });
         } catch (error) {
             console.error(error);
@@ -32,3 +31,5 @@ class UserCreateService {
         }
     }
 }
+
+module.exports = UserCreateService;
