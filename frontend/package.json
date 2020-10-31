@@ -10,6 +10,7 @@
     "start": "nuxt start"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.12.2",
     "nuxt": "^2.0.0",
     "vuelidate": "^0.7.6"
   },

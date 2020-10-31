@@ -1,29 +1,32 @@
 require('dotenv').config();
 
 export default {
-  ssr: true,
-  target: 'static',
+  mode: 'spa',
   /*
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: process.env.npm_package_name || "",
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || '',
+        hid: "description",
+        name: "description",
+        content: process.env.npm_package_description || "",
       },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    script: [{ src: `https://paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}&currency=BRL` }]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    script: [
+      {
+        src: `https://paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}&currency=BRL`,
+      },
+    ],
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: "#fff" },
   /*
    ** Global CSS
    */
@@ -31,11 +34,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vuelidate'],
+  plugins: ["~/plugins/vuelidate"],
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ["@nuxtjs/axios"],
   /*
    ** Build configuration
    */
@@ -45,5 +48,8 @@ export default {
      */
     extend(config, ctx) {},
   },
-  buildModules: ['@nuxtjs/vuetify']
+  buildModules: ["@nuxtjs/vuetify"],
+  axios: {
+    baseURL: process.env.BASE_URL, // Used as fallback if no runtime config is provided
+  },
 };

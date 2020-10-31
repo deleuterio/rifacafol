@@ -22,7 +22,13 @@
           <v-stepper-items>
             <v-stepper-content step="1">
               <Identity v-model="form" />
-              <v-btn color="primary" @click="step = 2" :disabled="!form.isValid"> Seguir </v-btn>
+              <v-btn
+                color="primary"
+                v-on:click="createIdentity"
+                :disabled="!form.isValid"
+              >
+                Seguir
+              </v-btn>
             </v-stepper-content>
 
             <v-stepper-content step="2">
@@ -61,9 +67,18 @@ export default {
       step: 1,
       form: {
         valid: false,
-        data: {}
-      }
+        data: {},
+      },
+      data: {
+        user: null,
+      },
     };
+  },
+  methods: {
+    async createIdentity() {
+      this.user = await this.$axios.post('/user', { ...this.form.data });
+      this.step = 2;
+    },
   },
 };
 </script>
