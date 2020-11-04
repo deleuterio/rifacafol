@@ -1,19 +1,19 @@
 
 const express = require('express');
 /* Modules */
-const user = require('../../controller/user');
+const payment = require('../../controller/payment');
 /* End of Modules */
 
 
 const router = express.Router();
 
-router.post('/user', async (req, res, next) => {
+router.post('/payment/order', async (req, res, next) => {
     const data = {
         body: req.body,
         query: req.query,
         params: req.params,
     };
-    const response = await user.create(data);
+    const response = await payment.createOrder(data);
     res.status(response.statusCode).send(response.body);
     next();
 });
