@@ -14,6 +14,8 @@ dotenv.config(config);
 const requiredVariables = {
     NODE_ENV: process.env.NODE_ENV,
     BUCKET_RIFA_DATALAKE_RAW: process.env.BUCKET_RIFA_DATALAKE_RAW,
+    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
+    PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
 };
 
 const optionalVariables = {};
