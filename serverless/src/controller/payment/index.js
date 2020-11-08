@@ -1,4 +1,5 @@
 const createOrderService = require('./service/createOrder');
+const finishService = require('./service/finish');
 
 async function createOrder({ body }) {
     const { name, email, phone, address, amountValue } = body;
@@ -20,4 +21,13 @@ async function createOrder({ body }) {
     }
 }
 
-module.exports = { createOrder };
+async function finish({ body }) {
+    try {
+        const responseBody = await finishService({ body });
+        return { statusCode: 200, body: responseBody };
+    } catch (error) {
+        return { statusCode: 500, body: error };
+    }
+}
+
+module.exports = [{ method: 'post', handler: createOrder, path: '/payment/order' }, { method: 'post', handler: finish, path: '/payment/finish' }];
