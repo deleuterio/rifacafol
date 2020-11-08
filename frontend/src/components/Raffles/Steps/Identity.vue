@@ -58,7 +58,7 @@ export default {
       ],
       raffleItems: [...new Array(20)].map((_v, i) => ({
         text: i + 1,
-        value: (i + 1) * 5,
+        value: (i + 1) * 15,
       })),
 
       form: {
