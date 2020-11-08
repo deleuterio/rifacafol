@@ -29,7 +29,7 @@
             </v-stepper-content>
 
             <v-stepper-content step="3">
-              <Done :user="data.user" />
+              <Done v-if="step == 3" :user="data.user" />
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>

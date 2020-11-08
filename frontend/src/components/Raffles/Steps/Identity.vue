@@ -23,6 +23,17 @@
         <v-text-field v-model="form.data.phone" label="Telefone" required />
         <v-text-field v-model="form.data.address" label="Endereço" required />
 
+        <v-select v-model="form.data.quantity" :items="raffleItems" label="Quantidade de rifas">
+          <template v-slot:item="{ item, on }">
+            <v-list-item v-on="on">
+              <v-list-item-content>
+                <v-list-item-title>{{item.value}},00 R$</v-list-item-title>
+                <v-list-item-subtitle>{{item.text}} rifa{{item.text === 1 ? '' : 's'}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-select>
+
         <v-btn color="primary" v-on:click="createIdentity" :disabled="!valid">
           Seguir
         </v-btn>
@@ -45,19 +56,27 @@ export default {
         (v) => !!v || "E-mail é obrigatório",
         (v) => /.+@.+\..+/.test(v) || "E-mail tem que ser válido",
       ],
+      raffleItems: [...new Array(20)].map((_v, i) => ({
+        text: i + 1,
+        value: (i + 1) * 5,
+      })),
 
       form: {
         data: {
-          name: "Douglas",
-          email: "douglation@gmail.com",
-          phone: "8948949848",
-          address: "Rua 1",
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          quantity: 1,
         },
       },
     };
   },
 
   methods: {
+    handleRaffleQuantity(payload) {
+      this.form.data.quantity = payload;
+    },
     validate() {
       this.valid = this.$refs.form.validate();
     },
