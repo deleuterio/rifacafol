@@ -29,20 +29,30 @@ class PaymentCreateOrderService {
      * @param {Object} options
      */
     async _createPayment({ filename, data }) {
-        const mime = 'json';
-        const fullFilename = `${filename}.${mime}`;
-        const remotePath = `${this.remoteKey}/year=${this.now.getFullYear()}/month=${this.now.getMonth()}/day=${this.now.getDate()}/${fullFilename}`;
-        const key = this.rifaDatalakeRawFileStorage.createRemotePath(remotePath);
-        try {
-            const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(fullFilename, data);
-            return await this.rifaDatalakeRawFileStorage.upload({ filePath, key, mime });
-        } catch (error) {
-            console.error(error);
-            throw error;
-        } finally {
-            this.rifaDatalakeRawFileStorage.deleteJSONfile(filename);
-        }
-    }
+                                                 const mime = 'json';
+                                                 const fullFilename = `${filename}.${mime}`;
+                                                 // const remotePath = `${this.remoteKey}/year=${this.now.getFullYear()}/month=${this.now.getMonth()}/day=${this.now.getDate()}/${fullFilename}`;
+                                                 const remotePath = `${this.remoteKey}/${fullFilename}`;
+                                                 const key = this.rifaDatalakeRawFileStorage.createRemotePath(
+                                                     remotePath,
+                                                 );
+                                                 try {
+                                                     const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(
+                                                         fullFilename,
+                                                         data,
+                                                     );
+                                                     return await this.rifaDatalakeRawFileStorage.upload(
+                                                         { filePath, key, mime },
+                                                     );
+                                                 } catch (error) {
+                                                     console.error(error);
+                                                     throw error;
+                                                 } finally {
+                                                     this.rifaDatalakeRawFileStorage.deleteJSONfile(
+                                                         filename,
+                                                     );
+                                                 }
+                                             }
 }
 
 module.exports = PaymentCreateOrderService;
