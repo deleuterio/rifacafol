@@ -47,7 +47,7 @@ export default {
   name: "IdentityView",
   data() {
     return {
-      valid: true,
+      valid: false,
       nameRules: [
         (v) => !!v || "Nome é obrigatório",
         (v) => (v && v.length >= 4) || "Nome tem que ter no mínimo 4 letras",
