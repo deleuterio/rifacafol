@@ -1,4 +1,4 @@
-class PaymentFinishService {
+class PaymentConfirmService {
     constructor({ rafflePaymentSuccessQueue }) {
         this.rafflePaymentSuccessQueue = rafflePaymentSuccessQueue;
     }
@@ -18,4 +18,4 @@ class PaymentFinishService {
     }
 }
 
-module.exports = PaymentFinishService;
+module.exports = PaymentConfirmService;
