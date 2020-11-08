@@ -48,7 +48,7 @@ class S3 {
                 .promise();
 
             const { statusCode } = s3Obj.$response.httpResponse;
-            return { statusCode, url, key, mime, bucket: this.bucket };
+            return { statusCode, key, mime, bucket: this.bucket };
         }
     }
 
