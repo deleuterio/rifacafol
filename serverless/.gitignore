@@ -62,3 +62,6 @@ typings/
 
 # tmp folder
 /tmp
+
+# serverless build output
+.serverless/
