@@ -9,7 +9,7 @@ const config = require('../../../shared/config');
 /**
  * @class
  * @description An interface to implemnt methods to use aws-sdk s3 functions
- * @author Douglas Eleutério <douglaseleuterio@lett.digital>
+ * @author Douglas Eleutério <douglaseleuterio@gmail.com>
  */
 class S3 {
     /**

@@ -13,12 +13,15 @@ dotenv.config(config);
 
 const requiredVariables = {
     NODE_ENV: process.env.NODE_ENV,
+    AWS_REGION: process.env.AWS_REGION,
     BUCKET_RIFA_DATALAKE_RAW: process.env.BUCKET_RIFA_DATALAKE_RAW,
     PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
     PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
 };
 
-const optionalVariables = {};
+const optionalVariables = {
+    SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS: process.env.SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS,
+};
 
 if (NODE_ENV !== 'test') {
     const missingEnvWarn = Object.keys(optionalVariables).filter(v => optionalVariables[v] === undefined);
