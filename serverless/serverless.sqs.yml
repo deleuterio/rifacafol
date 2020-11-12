@@ -23,14 +23,15 @@ provider:
         - "sqs:DeleteMessage"
         - "sqs:GetQueueAttributes"
         - "sqs:ReceiveMessage"
+        - "sqs:SendMessage"
       Resource:
-        - "arn:aws:arn:aws:sqs:us-east-2::Raffle"
+        - "arn:aws:sqs:us-east-1:113779569966:RafflePaymentSuccessDev"
+        - "arn:aws:sqs:us-east-1:113779569966:RafflePaymentSuccessDevDLT"
   environment:
     PAYPAL_CLIENT_ID: AZx6AFHE0PdjD2a9WtPgtDwoQRdmZeKOpgBuQGaxuNVBLXsmidqJrXQ7ssccMyWO8bs5nUOsDKjwdJF-
     PAYPAL_CLIENT_SECRET: EB7WsOgv7Hvqfv4jgT37dnbO5zqwAevl216YSDPRu06GqH8AEMXG5RjSYnQWHIE_aVMVGkGQ-a1xxN43
     BUCKET_RIFA_DATALAKE_RAW: rifa-datalake-raw-dev
     SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDev"
-    AWS_REGION: us-east-1
     NODE_ENV: development
 
 functions:
@@ -39,7 +40,7 @@ functions:
     events:
       - http: ANY /
       - http: "ANY {proxy+}"
-  # processor:
+  # raffle-processor:
   #   handler: index.processor
   #   reservedConcurrency: 1
   #   events:
@@ -56,7 +57,7 @@ resources:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: "RafflePaymentSuccessDev"
-    RaffleErrorHandlerDevDLT:
+    RafflePaymentSuccessDevDLT:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: "RafflePaymentSuccessDevDLT"
