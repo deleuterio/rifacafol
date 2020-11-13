@@ -27,7 +27,7 @@ export default {
       .Buttons({
         // Call your server to set up the transaction
         createOrder: async () => {
-          const { data } = await request.post("/payment/order", { ...user, amountValue: 5 });
+          const { data } = await request.post("/payment/order", { ...user, amountValue: user.quantity * 5 });
           const { order } = data;
           this.$emit('input', order);
           return order.id;
