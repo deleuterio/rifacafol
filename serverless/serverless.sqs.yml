@@ -15,6 +15,7 @@ provider:
       Action:
         - "s3:PutObject"
         - "s3:HeadObject"
+        - "s3:GetObject"
       Resource:
         - "arn:aws:s3:::rifa-datalake-raw-dev"
         - "arn:aws:s3:::rifa-datalake-raw-dev/*"
