@@ -63,8 +63,8 @@ class S3 {
     }
 
     async getJSON({ key }) {
-        const data = await s3.getObject({
-            Bucket: this,bucket,
+        const data = await this.s3.getObject({
+            Bucket: this.bucket,
             Key: key
         }).promise();
         const json = JSON.parse(Buffer.from(data.Body).toString("utf8"));
