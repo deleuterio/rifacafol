@@ -1,4 +1,6 @@
-const serverless = require('serverless-http');
-const app = require('../api/server');
+const raffleCreate = require('../../controller/raffle/service/create');;
 
-module.exports = serverless(app);
+module.exports = async (event) => {
+    const message = event.Records[0].body;
+    await raffleCreate({ message });
+};
