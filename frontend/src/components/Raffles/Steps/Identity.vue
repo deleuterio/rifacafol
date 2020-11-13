@@ -23,7 +23,7 @@
         <v-text-field v-model="form.data.phone" label="Telefone" required />
         <v-text-field v-model="form.data.address" label="Endereço" required />
 
-        <v-select v-model="form.data.quantity" :items="raffleItems" label="Quantidade de rifas">
+        <v-select v-model="form.data.amountValue" :items="raffleItems" label="Quantidade de rifas">
           <template v-slot:item="{ item, on }">
             <v-list-item v-on="on">
               <v-list-item-content>
@@ -67,16 +67,13 @@ export default {
           email: "",
           phone: "",
           address: "",
-          quantity: 1,
+          amountValue: 5,
         },
       },
     };
   },
 
   methods: {
-    handleRaffleQuantity(payload) {
-      this.form.data.quantity = payload;
-    },
     validate() {
       this.valid = this.$refs.form.validate();
     },
