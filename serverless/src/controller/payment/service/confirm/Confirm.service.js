@@ -8,13 +8,13 @@ class PaymentConfirmService {
 
         const paymentConfirmDTO = {
             eventId: body.id,
-            created: body.create_time;
+            created: body.create_time,
             resourceType: body.resource_type,
             eventType: body.event_type,
             orderId: resource.id,
             amount: resource.amount,
             finalCapture: resource.final_capture,
-            orderStatus: resource.status
+            orderStatus: resource.status,
         };
 
         try {

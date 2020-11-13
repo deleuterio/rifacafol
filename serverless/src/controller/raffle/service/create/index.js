@@ -6,7 +6,7 @@ const RaffleCreateService = require('./Create.service');
 /* Service dependencies end */
 
 
-module.exports = async ({ message }) {
+module.exports = async ({ message }) => {
     const raffleCreateService = new RaffleCreateService();
     return await raffleCreateService.execute({ message });
 }
