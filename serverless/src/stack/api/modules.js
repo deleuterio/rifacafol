@@ -2,13 +2,13 @@
 const express = require('express');
 /* Modules */
 const payment = require('../../controller/payment');
-const { key } = require('../../resource/file-storage/s3/RifaDatalakeRawFileStorage');
+const raffle = require('../../controller/raffle');
 /* End of Modules */
 
 
 const router = express.Router();
 
-payment.forEach(({ path, method, handler }) => {
+[...payment, ...raffle].forEach(({ path, method, handler }) => {
     router[method](path, async (req, res, next) => {
         const data = {
             body: req.body,
