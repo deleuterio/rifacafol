@@ -17,6 +17,8 @@ const requiredVariables = {
     BUCKET_RIFA_DATALAKE_RAW: process.env.BUCKET_RIFA_DATALAKE_RAW,
     PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
     PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
+    SES_EMAIL_SOURCE: process.env.SES_EMAIL_SOURCE,
+    SES_EMAIL_TEMPLATE_SUCCESS: process.env.SES_EMAIL_TEMPLATE_SUCCESS,
 };
 
 const optionalVariables = {

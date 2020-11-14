@@ -1,6 +1,7 @@
 class RaffleCreateService {
-    constructor({ rifaDatalakeRawFileStorage }) {
+    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
+        this.rifaCafolSuccessEmail = rifaCafolSuccessEmail;
         this.remoteKey = 'raffle/orders';
         this.now = new Date();
     }
@@ -10,11 +11,11 @@ class RaffleCreateService {
         try {
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
                 // Get user info
-                const payment = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
+                const { user, order } = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
 
                 // Get raffle numbers
                 const raffle = await this.rifaDatalakeRawFileStorage.getJSON({ key: `raffle/index.json` });
-                const raffleUnits = Number(payment.order.content.amount.value) / 15;
+                const raffleUnits = Number(order.content.amount.value) / 15;
                 const raffleIds = [];
                 await Promise.all([
                     // Set raffle index
@@ -22,12 +23,24 @@ class RaffleCreateService {
                     [...new Array(raffleUnits)].map((_value, index) => {
                         const raffleId = index + raffle.number;
                         raffleIds.push(raffleId);
-                        return this._createRaffle({ filename: raffleId, data: { ...payment, raffleId } });
+                        return this._createRaffle({ filename: raffleId, data: { user, order, raffleId } });
                     }),
                 ]);
 
                 // Send email
-                return { raffleUnits, raffle, payment };
+                await this.rifaCafolSuccessEmail.sendEmail({
+                    email: user.email,
+                    templateData: {
+                        numbers: raffleIds.join(', '),
+                        amount: order.content.amount.value,
+                        email: user.email,
+                        phone: user.phone,
+                        address: user.address,
+                        date: '25 de Janeiro de 2021',
+                    },
+                });
+
+                return { raffleUnits, raffle, order, user };
             } else {
                 // Send fail email
             }
