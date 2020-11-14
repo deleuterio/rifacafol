@@ -23,6 +23,7 @@ const requiredVariables = {
 
 const optionalVariables = {
     SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS: process.env.SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS,
+    SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS_DLT: process.env.SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS_DLT,
 };
 
 if (NODE_ENV !== 'test') {

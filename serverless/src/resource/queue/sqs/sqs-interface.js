@@ -16,6 +16,13 @@ class SQS {
         this.sqs = new AWS.SQS({ region: config.AWS_REGION });
     }
 
+    /**
+     * @description send message to sqs queue
+     * @param {Object} options
+     * @param {String} options.body The message body
+     * @param {String} options.messageId The message identifier
+     * @returns {Object} the sqs response
+     */
     async send({ body, messageId }) {
         return await this.sqs
             .sendMessage({

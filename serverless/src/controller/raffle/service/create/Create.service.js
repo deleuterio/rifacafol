@@ -1,8 +1,9 @@
 class RaffleCreateService {
-    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rafflePaymentSuccessQueue }) {
+    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rafflePaymentSuccessQueue, rafflePaymentSuccessQueueDLT }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
         this.rifaCafolSuccessEmail = rifaCafolSuccessEmail;
         this.rafflePaymentSuccessQueue = rafflePaymentSuccessQueue;
+        this.rafflePaymentSuccessQueueDLT = rafflePaymentSuccessQueueDLT;
         this.remoteKey = 'raffle/orders';
         this.now = new Date();
     }
@@ -38,7 +39,7 @@ class RaffleCreateService {
         } catch (error) {
             // Send fail email
             // Send message to dead letter queue
-
+            this.rafflePaymentSuccessQueueDLT.send({ body: JSON.stringify(body), messageId });
             console.error(error);
             throw error;
         } finally {
