@@ -1,12 +1,13 @@
 class RaffleCreateService {
-    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail }) {
+    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rafflePaymentSuccessQueue }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
         this.rifaCafolSuccessEmail = rifaCafolSuccessEmail;
+        this.rafflePaymentSuccessQueue = rafflePaymentSuccessQueue;
         this.remoteKey = 'raffle/orders';
         this.now = new Date();
     }
-    async execute({ message }) {
-        const { eventId, created, resourceType, eventType, orderId, orderStatus } = message;
+    async execute({ message, receiptHandle }) {
+        const { eventType, orderId } = message;
 
         try {
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
@@ -28,26 +29,20 @@ class RaffleCreateService {
                 ]);
 
                 // Send email
-                await this.rifaCafolSuccessEmail.sendEmail({
-                    email: user.email,
-                    templateData: {
-                        numbers: raffleIds.join(', '),
-                        amount: order.content.amount.value,
-                        email: user.email,
-                        phone: user.phone,
-                        address: user.address,
-                        date: '25 de Janeiro de 2021',
-                    },
-                });
+                await this._sendEmail({ user, order, raffleIds });
 
                 return { raffleUnits, raffle, order, user };
             } else {
-                // Send fail email
+                throw new Error('Order not approved');
             }
         } catch (error) {
+            // Send fail email
             // Send message to dead letter queue
+
+            console.error(error);
+            throw error;
         } finally {
-            // Delete message
+            this.rafflePaymentSuccessQueue.delete({ receiptHandle });
         }
     }
 
@@ -91,6 +86,20 @@ class RaffleCreateService {
         } finally {
             this.rifaDatalakeRawFileStorage.deleteJSONfile(fullFilename);
         }
+    }
+
+    async _sendEmail({ user, order, raffleIds }) {
+        return await this.rifaCafolSuccessEmail.sendEmail({
+            email: user.email,
+            templateData: {
+                numbers: raffleIds.join(', '),
+                amount: order.content.amount.value,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                date: '25 de Janeiro de 2021',
+            },
+        });
     }
 }
 

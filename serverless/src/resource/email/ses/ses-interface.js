@@ -29,18 +29,22 @@ class SES {
      * @param {Object} options.templateData - The data to override on template tags
      */
     async sendEmail({ email, templateData }) {
-        return await this.ses
-            .sendTemplatedEmail({
-                Destination: {
-                    /* required */
-                    BccAddresses: [config.SES_EMAIL_SOURCE],
-                    ToAddresses: [email],
-                },
-                Source: config.SES_EMAIL_SOURCE,
-                Template: this.templateId,
-                TemplateData: JSON.stringify(templateData),
-            })
-            .promise();
+        if (config.NODE_ENV === 'local') {
+            return true;
+        } else {
+            return await this.ses
+                .sendTemplatedEmail({
+                    Destination: {
+                        /* required */
+                        BccAddresses: [config.SES_EMAIL_SOURCE],
+                        ToAddresses: [email],
+                    },
+                    Source: config.SES_EMAIL_SOURCE,
+                    Template: this.templateId,
+                    TemplateData: JSON.stringify(templateData),
+                })
+                .promise();
+        }
     }
 }
 
