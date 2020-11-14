@@ -30,6 +30,25 @@ class SQS {
             })
             .promise();
     }
+
+    async receive() {
+        return await this.sqs
+            .receiveMessage({
+                QueueUrl: this.queueUrl,
+                MaxNumberOfMessages: 1,
+                AttributeNames: ['All'],
+            })
+            .promise();
+    }
+
+    async delete({ receiptHandle }) {
+        return await this.sqs
+            .deleteMessage({
+                QueueUrl: this.queueUrl,
+                ReceiptHandle: receiptHandle,
+            })
+            .promise();
+    }
 }
 
 module.exports = SQS;
