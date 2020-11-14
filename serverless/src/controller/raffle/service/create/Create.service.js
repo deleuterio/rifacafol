@@ -6,8 +6,8 @@ class RaffleCreateService {
         this.remoteKey = 'raffle/orders';
         this.now = new Date();
     }
-    async execute({ message, receiptHandle }) {
-        const { eventType, orderId } = message;
+    async execute({ messageId, body, receiptHandle }) {
+        const { eventType, orderId } = body;
 
         try {
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {

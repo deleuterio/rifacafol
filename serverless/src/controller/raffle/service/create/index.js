@@ -8,7 +8,6 @@ const rafflePaymentSuccessQueue = require('../../../../resource/queue/sqs/Raffle
 /* Service dependencies end */
 
 
-module.exports = async ({ message, receiptHandle }) => {
-    const raffleCreateService = new RaffleCreateService({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rafflePaymentSuccessQueue });
-    return await raffleCreateService.execute({ message, receiptHandle });
+module.exports = async ({ messageId, body, receiptHandle }) => {
+    return await raffleCreateService.execute({ messageId, body, receiptHandle });
 };

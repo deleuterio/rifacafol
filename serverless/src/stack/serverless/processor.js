@@ -1,7 +1,8 @@
 const raffleCreate = require('../../controller/raffle/service/create');;
 
 module.exports = async (event) => {
-    const message = event.Records[0].body;
+    const body = event.Records[0].body;
     const receiptHandle = event.Records[0].receiptHandle;
-    await raffleCreate({ receiptHandle, message });
+    const messageId = event.Records[0].messageId;
+    await raffleCreate({ messageId, receiptHandle, body });
 };
