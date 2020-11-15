@@ -10,15 +10,14 @@ class RaffleCreateService {
     }
     async execute({ messageId, body, receiptHandle }) {
         const { eventType, orderId } = body;
-        let user = null;
+        let [user, order] = [null, null];
 
         try {
+            // Get user info
+            const payment = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
+            user = payment.user;
+            order = payment.order;
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
-                // Get user info
-                const payment = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
-                user = payment.user;
-                const order = payment.order;
-
                 // Get raffle numbers
                 const raffle = await this.rifaDatalakeRawFileStorage.getJSON({ key: `raffle/index.json` });
                 const raffleUnits = Number(order.content.amount.value) / 15;
@@ -42,8 +41,12 @@ class RaffleCreateService {
             }
         } catch (error) {
             // Send fail email
-            if (user) {
-                this._sendErrorEmail({ name: user.name, email: user.email, orderId });
+            if (user && order) {
+                try {
+                    await this._sendErrorEmail({ user, order, orderId });
+                } catch (er) {
+                    console.error(er);
+                }
             }
             // Send message to dead letter queue
             this.rafflePaymentSuccessQueueDLT.send({
@@ -113,10 +116,17 @@ class RaffleCreateService {
         });
     }
 
-    async _sendErrorEmail({ email, name, orderId }) {
-        return await this.rifaCafolSuccessEmail.sendEmail({
-            email: email,
-            templateData: { name, orderId },
+    async _sendErrorEmail({ user, order, orderId }) {
+        return await this.rifaCafolErrorEmail.sendEmail({
+            email: user.email,
+            templateData: {
+                orderId: orderId,
+                amount: order.content.amount.value,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                date: '25 de Janeiro de 2021',
+            },
         });
     }
 }

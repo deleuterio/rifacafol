@@ -38,8 +38,8 @@ provider:
     SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDev"
     SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS_DLT: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDevDLT"
     SES_EMAIL_SOURCE: rifacafol@gmail.com
-    SES_EMAIL_TEMPLATE_SUCCESS: rifacafol-success-20201114121339
-    SES_EMAIL_TEMPLATE_ERROR: rifacafol-error-20201115102000
+    SES_EMAIL_TEMPLATE_SUCCESS: rifacafol-success-20201115112300
+    SES_EMAIL_TEMPLATE_ERROR: rifacafol-error-20201115112300
     NODE_ENV: development
 
 functions:
