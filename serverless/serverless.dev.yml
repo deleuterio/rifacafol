@@ -36,6 +36,10 @@ provider:
     PAYPAL_CLIENT_SECRET: EB7WsOgv7Hvqfv4jgT37dnbO5zqwAevl216YSDPRu06GqH8AEMXG5RjSYnQWHIE_aVMVGkGQ-a1xxN43
     BUCKET_RIFA_DATALAKE_RAW: rifa-datalake-raw-dev
     SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDev"
+    SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS_DLT: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDevDLT"
+    SES_EMAIL_SOURCE: rifacafol@gmail.com
+    SES_EMAIL_TEMPLATE_SUCCESS: rifacafol-success-20201114121339
+    SES_EMAIL_TEMPLATE_ERROR: rifacafol-error-20201115102000
     NODE_ENV: development
 
 functions:
@@ -44,16 +48,16 @@ functions:
     events:
       - http: ANY /
       - http: "ANY {proxy+}"
-  # raffle-processor:
-  #   handler: index.processor
-  #   reservedConcurrency: 1
-  #   events:
-  #     - sqs:
-  #         batchSize: 1
-  #         arn:
-  #           Fn::GetAtt:
-  #             - RafflePaymentSuccessDev
-  #             - Arn
+  raffle-processor:
+    handler: index.processor
+    reservedConcurrency: 1
+    events:
+      - sqs:
+          batchSize: 1
+          arn:
+            Fn::GetAtt:
+              - RafflePaymentSuccessDev
+              - Arn
 
 resources:
   Resources:

@@ -10,11 +10,14 @@ class RaffleCreateService {
     }
     async execute({ messageId, body, receiptHandle }) {
         const { eventType, orderId } = body;
+        let user = null;
 
         try {
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
                 // Get user info
-                const { user, order } = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
+                const payment = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
+                user = payment.user;
+                const order = payment.order;
 
                 // Get raffle numbers
                 const raffle = await this.rifaDatalakeRawFileStorage.getJSON({ key: `raffle/index.json` });
@@ -39,7 +42,9 @@ class RaffleCreateService {
             }
         } catch (error) {
             // Send fail email
-            this._sendErrorEmail({ name: user.name, email: user.email, orderId });
+            if (user) {
+                this._sendErrorEmail({ name: user.name, email: user.email, orderId });
+            }
             // Send message to dead letter queue
             this.rafflePaymentSuccessQueueDLT.send({
                 body: JSON.stringify({ body, error: JSON.stringify(error, Object.getOwnPropertyNames(error)) }),
