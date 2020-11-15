@@ -1,0 +1,8 @@
+{
+    "Template": {
+        "TemplateName": "rifacafol-error-20201115102000",
+        "SubjectPart": "rifacafol-error",
+        "HtmlPart": "<h1>Olá {{name}},</h1><p>Houve um erro com seu pedido de rifa {{orderId}}.</p> <p>Responda esse email para obter mais informações ou tente novamente.</p>",
+        "TextPart": "Olá {{name}},\r\nHouve um erro com seu pedido de rifa {{orderId}}.\nResponda esse email para obter mais informações ou tente novamente."
+    }
+}

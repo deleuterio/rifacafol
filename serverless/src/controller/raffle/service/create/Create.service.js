@@ -1,7 +1,8 @@
 class RaffleCreateService {
-    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rafflePaymentSuccessQueue, rafflePaymentSuccessQueueDLT }) {
+    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rifaCafolErrorEmail, rafflePaymentSuccessQueue, rafflePaymentSuccessQueueDLT }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
         this.rifaCafolSuccessEmail = rifaCafolSuccessEmail;
+        this.rifaCafolErrorEmail = rifaCafolErrorEmail;
         this.rafflePaymentSuccessQueue = rafflePaymentSuccessQueue;
         this.rafflePaymentSuccessQueueDLT = rafflePaymentSuccessQueueDLT;
         this.remoteKey = 'raffle/orders';
@@ -38,8 +39,12 @@ class RaffleCreateService {
             }
         } catch (error) {
             // Send fail email
+            this._sendErrorEmail({ name: user.name, email: user.email, orderId });
             // Send message to dead letter queue
-            this.rafflePaymentSuccessQueueDLT.send({ body: JSON.stringify(body), messageId });
+            this.rafflePaymentSuccessQueueDLT.send({
+                body: JSON.stringify({ body, error: JSON.stringify(error, Object.getOwnPropertyNames(error)) }),
+                messageId,
+            });
             console.error(error);
             throw error;
         } finally {
@@ -100,6 +105,13 @@ class RaffleCreateService {
                 address: user.address,
                 date: '25 de Janeiro de 2021',
             },
+        });
+    }
+
+    async _sendErrorEmail({ email, name, orderId }) {
+        return await this.rifaCafolSuccessEmail.sendEmail({
+            email: email,
+            templateData: { name, orderId },
         });
     }
 }
