@@ -1,7 +1,8 @@
 <template>
     <div>
-        Confira seu email!
-        {{user.email}}
+        <h3>Confira seu email:</h3>
+        <br/>
+        <b>{{user.email}}</b>
     </div>
 </template>
 

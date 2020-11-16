@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>Opções de pagamento</h3>
     <div id="paypal" style="margin-top: 15px" />
   </div>
 </template>

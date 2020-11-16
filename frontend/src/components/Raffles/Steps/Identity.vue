@@ -1,45 +1,44 @@
 <template>
-  <div>
-    <div>
-      <h1 class="title">Rifas</h1>
-      <h2 class="subtitle">
-        Os números para o sorteio serão enviados após a confirmação de
-        pagamento!
-      </h2>
-      <v-form ref="form" v-model="valid" lazy-validation>
-        <v-text-field
-          v-model="form.data.name"
-          :counter="0"
-          :rules="nameRules"
-          label="Nome Completo"
-          required
-        />
-        <v-text-field
-          v-model="form.data.email"
-          :rules="emailRules"
-          label="Email"
-          required
-        />
-        <v-text-field v-model="form.data.phone" label="Telefone" required />
-        <v-text-field v-model="form.data.address" label="Endereço" required />
+  <v-form ref="form" v-model="valid" lazy-validation>
+    <v-text-field
+      v-model="form.data.name"
+      :counter="0"
+      :rules="nameRules"
+      label="Nome Completo"
+      required
+    />
+    <v-text-field
+      v-model="form.data.email"
+      :rules="emailRules"
+      label="Email"
+      required
+    />
+    <v-text-field v-model="form.data.phone" label="Telefone" required />
+    <v-text-field v-model="form.data.address" label="Endereço" required />
 
-        <v-select v-model="form.data.amountValue" :items="raffleItems" label="Quantidade de rifas">
-          <template v-slot:item="{ item, on }">
-            <v-list-item v-on="on">
-              <v-list-item-content>
-                <v-list-item-title>{{item.value}},00 R$</v-list-item-title>
-                <v-list-item-subtitle>{{item.text}} rifa{{item.text === 1 ? '' : 's'}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-        </v-select>
+    <v-select
+      v-model="form.data.amountValue"
+      :items="raffleItems"
+      label="Quantidade de rifas"
+    >
+      <template v-slot:item="{ item, on }">
+        <v-list-item v-on="on">
+          <v-list-item-content>
+            <v-list-item-title>{{ item.value }},00 R$</v-list-item-title>
+            <v-list-item-subtitle
+              >{{ item.text }} rifa{{
+                item.text === 1 ? "" : "s"
+              }}</v-list-item-subtitle
+            >
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-select>
 
-        <v-btn color="primary" v-on:click="createIdentity" :disabled="!valid">
-          Seguir
-        </v-btn>
-      </v-form>
-    </div>
-  </div>
+    <v-btn color="primary" v-on:click="createIdentity" :disabled="!valid">
+      Seguir
+    </v-btn>
+  </v-form>
 </template>
 
 <script>
