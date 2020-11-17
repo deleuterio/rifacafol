@@ -58,6 +58,10 @@ functions:
             Fn::GetAtt:
               - RafflePaymentSuccessDev
               - Arn
+  # report:
+  #   handler: index.report
+  #   events:
+  #     - schedule: cron(0 6,20 * * ? *)
 
 resources:
   Resources:
