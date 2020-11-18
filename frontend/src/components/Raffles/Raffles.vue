@@ -51,7 +51,7 @@ export default {
   components: { Identity, Payment, Done },
   data() {
     return {
-      step: 3,
+      step: 1,
       data: {
         user: {email: 'douglaseleuterio@gmail.com'},
         payment: null,
