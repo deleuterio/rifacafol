@@ -61,8 +61,8 @@ export default {
       ],
       phoneRules: [
         (v) => !!v || "Telefone é obrigatório",
+        (v) => /^\d+$/g.test(v) || "Telefone deve conter apenas números",
         (v) => v.length >= 10 || "Telefone deve pelo menos 10 números",
-        (v) => /[0-9]/.test(v) || "Telefone deve conter apenas números",
       ],
       raffleItems: [...new Array(20)].map((_v, i) => ({
         text: i + 1,
@@ -80,7 +80,6 @@ export default {
       },
     };
   },
-
   methods: {
     validate() {
       this.valid = this.$refs.form.validate();
