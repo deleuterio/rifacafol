@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-layout justify-center style="width: 100%">
+    <v-layout justify-center fill-height style="width: 100%">
       <v-flex sm12 md8 align-self-center>
         <v-stepper v-model="step">
           <v-stepper-header>
@@ -51,10 +51,9 @@ export default {
   components: { Identity, Payment, Done },
   data() {
     return {
-      step: 1,
-      user: null,
+      step: 3,
       data: {
-        user: null,
+        user: {email: 'douglaseleuterio@gmail.com'},
         payment: null,
       },
     };

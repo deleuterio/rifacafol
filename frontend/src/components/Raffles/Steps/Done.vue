@@ -1,8 +1,16 @@
 <template>
     <div>
-        <h3>Confira seu email:</h3>
-        <br/>
-        <b>{{user.email}}</b>
+        <v-alert
+            dense
+            outlined
+            type="info"
+            prominent
+            icon="mdi-email"
+        >
+            Em instantes confirmaremos seu pedido no email:
+            <br/>
+            <strong>{{user.email}}</strong>
+        </v-alert>
     </div>
 </template>
 
