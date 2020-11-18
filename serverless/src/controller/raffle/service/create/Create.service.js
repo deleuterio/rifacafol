@@ -68,7 +68,7 @@ class RaffleCreateService {
     async _createRaffle({ filename, data }) {
         const mime = 'json';
         const fullFilename = `${filename}.${mime}`;
-        const remotePath = `${this.remoteKey}/year=${this.now.getFullYear()}/month=${this.now.getMonth()}/day=${this.now.getDate()}/${fullFilename}`;
+        const remotePath = `${this.remoteKey}/year=${this.now.getFullYear()}/month=${this.now.getMonth() + 1}/day=${this.now.getDate()}/${fullFilename}`;
         const key = this.rifaDatalakeRawFileStorage.createRemotePath(remotePath);
         try {
             const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(fullFilename, data);
