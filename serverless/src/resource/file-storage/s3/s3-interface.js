@@ -9,7 +9,7 @@ const config = require('../../../shared/config');
 /**
  * @class
  * @description An interface to implemnt methods to use aws-sdk s3 functions
- * @author Douglas Eleutério <douglaseleuterio@lett.digital>
+ * @author Douglas Eleutério <douglaseleuterio@gmail.com>
  */
 class S3 {
     /**
@@ -48,7 +48,7 @@ class S3 {
                 .promise();
 
             const { statusCode } = s3Obj.$response.httpResponse;
-            return { statusCode, url, key, mime, bucket: this.bucket };
+            return { statusCode, key, mime, bucket: this.bucket };
         }
     }
 
@@ -63,8 +63,8 @@ class S3 {
     }
 
     async getJSON({ key }) {
-        const data = await s3.getObject({
-            Bucket: this,bucket,
+        const data = await this.s3.getObject({
+            Bucket: this.bucket,
             Key: key
         }).promise();
         const json = JSON.parse(Buffer.from(data.Body).toString("utf8"));

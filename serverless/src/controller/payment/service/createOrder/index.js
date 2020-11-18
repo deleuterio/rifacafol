@@ -9,11 +9,11 @@ const userCreateService = require('../../../user/service/create')
 /* Service dependencies end */
 
 module.exports = async ({ userDTO, amountValue }) => {
-    const user = await userCreateService({ userDTO });
+    const { data } = await userCreateService({ userDTO });
     const paymentCreateOrderService = new PaymentCreateOrderService({
         uuidv4,
         rifaDatalakeRawFileStorage,
         paymentCreateOrder: new PaymentCreateOrder(),
     });
-    return await paymentCreateOrderService.execute({ user, amountValue });
+    return await paymentCreateOrderService.execute({ user: data, amountValue });
 };

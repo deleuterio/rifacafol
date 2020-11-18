@@ -1,7 +1,7 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container>
+  <v-container fluid>
+    <v-layout justify-center fill-height style="width: 100%">
+      <v-flex sm12 md8 align-self-center>
         <v-stepper v-model="step">
           <v-stepper-header>
             <v-stepper-step :complete="step > 1" step="1">
@@ -25,17 +25,22 @@
             </v-stepper-content>
 
             <v-stepper-content step="2">
-              <Payment v-if="step == 2" v-model="data.payment" :user="data.user" v-on:nextStep="step = 3" />
+              <Payment
+                v-if="step == 2"
+                v-model="data.payment"
+                :user="data.user"
+                v-on:nextStep="step = 3"
+              />
             </v-stepper-content>
 
             <v-stepper-content step="3">
-              <Done :user="data.user" />
+              <Done v-if="step == 3" :user="data.user" />
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
-      </v-container>
-    </v-main>
-  </v-app>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -47,9 +52,8 @@ export default {
   data() {
     return {
       step: 1,
-      user: null,
       data: {
-        user: null,
+        user: {email: 'douglaseleuterio@gmail.com'},
         payment: null,
       },
     };

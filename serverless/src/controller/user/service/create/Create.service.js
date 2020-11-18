@@ -8,7 +8,7 @@ class UserCreateService {
     async execute({ user }) {
         const userId = this.uuidv4();
         const userDTO = { userId, ...user };
-        return { ok: true, user: userDTO };
+        return { ok: true, data: userDTO };
     }
 }
 

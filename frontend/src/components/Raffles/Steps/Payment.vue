@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>Opções de pagamento</h3>
     <div id="paypal" style="margin-top: 15px" />
   </div>
 </template>
@@ -27,7 +28,7 @@ export default {
       .Buttons({
         // Call your server to set up the transaction
         createOrder: async () => {
-          const { data } = await request.post("/payment/order", { ...user, amountValue: 5 });
+          const { data } = await request.post("/payment/order", { ...user });
           const { order } = data;
           this.$emit('input', order);
           return order.id;
