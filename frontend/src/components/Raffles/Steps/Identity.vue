@@ -7,19 +7,23 @@
       label="Nome Completo"
       required
     />
-    <v-text-field
-      v-model="form.data.email"
-      :rules="emailRules"
-      label="Email"
-      required
-    />
-    <v-text-field v-model="form.data.phone" label="Telefone" required />
+    <v-text-field v-model="form.data.email" :rules="emailRules" label="" required>
+      <template v-slot:label>
+        <div>Email <small>(exemplo@cafol.org)</small></div>
+      </template>
+    </v-text-field>
+    <v-text-field v-model="form.data.phone" :rules="phoneRules" required>
+      <template v-slot:label>
+        <div>Telefone <small>(XX) XXXX-XXXX</small></div>
+      </template>
+    </v-text-field>
     <v-text-field v-model="form.data.address" label="Endereço" required />
 
     <v-select
       v-model="form.data.amountValue"
       :items="raffleItems"
       label="Quantidade de rifas"
+      required
     >
       <template v-slot:item="{ item, on }">
         <v-list-item v-on="on">
@@ -55,6 +59,11 @@ export default {
         (v) => !!v || "E-mail é obrigatório",
         (v) => /.+@.+\..+/.test(v) || "E-mail tem que ser válido",
       ],
+      phoneRules: [
+        (v) => !!v || "Telefone é obrigatório",
+        (v) => v.length >= 10 || "Telefone deve pelo menos 10 números",
+        (v) => /[0-9]/.test(v) || "Telefone deve conter apenas números",
+      ],
       raffleItems: [...new Array(20)].map((_v, i) => ({
         text: i + 1,
         value: (i + 1) * 15,
@@ -66,7 +75,7 @@ export default {
           email: "",
           phone: "",
           address: "",
-          amountValue: 5,
+          amountValue: 15,
         },
       },
     };
