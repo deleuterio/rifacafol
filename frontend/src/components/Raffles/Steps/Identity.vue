@@ -39,7 +39,7 @@
       </template>
     </v-select>
 
-    <v-btn color="primary" v-on:click="createIdentity" :disabled="!valid">
+    <v-btn color="primary" v-on:click="createIdentity" :disabled="!valid || !dirty">
       Seguir
     </v-btn>
   </v-form>
@@ -51,6 +51,7 @@ export default {
   data() {
     return {
       valid: false,
+      dirty: false,
       nameRules: [
         (v) => !!v || "Nome é obrigatório",
         (v) => (v && v.length >= 4) || "Nome tem que ter no mínimo 4 letras",
@@ -82,6 +83,7 @@ export default {
   },
   methods: {
     validate() {
+      this.dirty = true;
       this.valid = this.$refs.form.validate();
     },
     async createIdentity() {
