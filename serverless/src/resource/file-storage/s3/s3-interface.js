@@ -71,6 +71,13 @@ class S3 {
         return json;
     }
 
+    async listObjects({ key }) {
+        return this.s3.listObjects({
+            Bucket: this.bucket,
+            Marker: key
+        }).promise();
+    }
+
     createRemotePath(remotePath) {
         if (this.key) {
             return `${this.key}/${remotePath}`;
