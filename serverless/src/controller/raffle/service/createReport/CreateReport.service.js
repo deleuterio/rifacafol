@@ -1,23 +1,45 @@
 class RaffleCreateReportService {
-    constructor({ rifaDatalakeRawFileStorage }) {
+    constructor({ rifaDatalakeRawFileStorage, workbook, rifaCafolReportEmail }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
+        this.rifaCafolReportEmail = rifaCafolReportEmail;
+        this.workbook = workbook;
+        this.header = [
+            { header: 'Raffle ID', key: 'raffleId' },
+            { header: 'User ID', key: 'userId' },
+            { header: 'Order ID', key: 'orderId' },
+            { header: 'Name', key: 'name' },
+            { header: 'E-mail', key: 'email' },
+            { header: 'Phone', key: 'phone' },
+            { header: 'Address', key: 'address' },
+            { header: 'Amount', key: 'amount' },
+        ];
         this.remoteKey = 'raffle/orders';
-        this.now = new Date();
     }
 
-    async execute({ date }) {
-        if (date) {
-            this.now = date;
-        }
-        const s3Keys = await this._getObjects(this.now);
-        if (s3Keys) {
+    async execute({ date = new Date() }) {
+        const s3Keys = await this._getObjects(date);
+        if (s3Keys && s3Keys.length) {
+            const sheet = this.workbook.addWorksheet('RaffleOrders');
+            sheet.columns = this.header;
+
             const raffleOrders = await Promise.all(
                 s3Keys.map(async key => {
-                    const raffleOrder = this.rifaDatalakeRawFileStorage.getJSON({ key });
-                    return raffleOrder;
+                    const { raffleId, user, order } = await this.rifaDatalakeRawFileStorage.getJSON({ key });
+                    sheet.addRow({
+                        raffleId,
+                        userId: user.userId,
+                        orderId: order.id,
+                        name: user.name,
+                        email: user.email,
+                        phone: user.phone,
+                        address: user.address,
+                        amount: order.content.amount.value,
+                    });
+                    return { raffleId, user, order };
                 }),
             );
-            return raffleOrders;
+            const buffer = await this.workbook.csv.writeBuffer();
+            await this.rifaCafolReportEmail.sendEmail({ date, count: raffleOrders.length, body: buffer });
         }
     }
 
