@@ -12,22 +12,14 @@ async function createOrder({ body }) {
             },
         };
     }
-    try {
-        const userDTO = { name, email, phone, address };
-        const responseBody = await createOrderService({ userDTO, amountValue });
-        return { statusCode: 200, body: responseBody };
-    } catch (error) {
-        return { statusCode: 500, body: error };
-    }
+    const userDTO = { name, email, phone, address };
+    const responseBody = await createOrderService({ userDTO, amountValue });
+    return { statusCode: 200, body: responseBody };
 }
 
 async function confirm({ body }) {
-    try {
-        const responseBody = await confirmService({ body });
-        return { statusCode: 200, body: responseBody };
-    } catch (error) {
-        return { statusCode: 500, body: error };
-    }
+    const responseBody = await confirmService({ body });
+    return { statusCode: 200, body: responseBody };
 }
 
 module.exports = [{ method: 'post', handler: createOrder, path: '/payment/order' }, { method: 'post', handler: confirm, path: '/payment/confirm' }];

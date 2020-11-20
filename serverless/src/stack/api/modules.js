@@ -15,9 +15,21 @@ const router = express.Router();
             query: req.query,
             params: req.params,
         };
-        const response = await handler(data);
-        res.status(response.statusCode).send(response.body);
-        next();
+        try {
+            const response = await handler(data);
+            res.status(response.statusCode).send(response.body);
+            if (response.statusCode >= 400) {
+                next(new Error(response.body.message));
+            }
+            next();
+        } catch (error) {
+            if (typeof error === 'object') {
+                res.status(500).send(JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error))));
+            } else {
+                res.status(500).send(error);
+            }
+            next(error);
+        }
     });
 });
 
