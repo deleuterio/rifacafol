@@ -1,11 +1,19 @@
 class RaffleCreateService {
-    constructor({ rifaDatalakeRawFileStorage, rifaCafolSuccessEmail, rifaCafolErrorEmail, rafflePaymentSuccessQueue, rafflePaymentSuccessQueueDLT }) {
+    constructor({
+        rifaDatalakeRawFileStorage,
+        rifaCafolSuccessEmail,
+        rifaCafolErrorEmail,
+        rafflePaymentSuccessQueue,
+        rafflePaymentSuccessQueueDLT,
+        pgPool,
+    }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
         this.rifaCafolSuccessEmail = rifaCafolSuccessEmail;
         this.rifaCafolErrorEmail = rifaCafolErrorEmail;
         this.rafflePaymentSuccessQueue = rafflePaymentSuccessQueue;
         this.rafflePaymentSuccessQueueDLT = rafflePaymentSuccessQueueDLT;
         this.remoteKey = 'raffle/orders';
+        this.pgPool = pgPool;
         this.now = new Date();
     }
     async execute({ messageId, body, receiptHandle }) {
@@ -19,23 +27,21 @@ class RaffleCreateService {
             order = payment.order;
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
                 // Get raffle numbers
-                const raffle = await this.rifaDatalakeRawFileStorage.getJSON({ key: `raffle/index.json` });
                 const raffleUnits = Number(order.content.amount.value) / 15;
-                const raffleIds = [];
-                await Promise.all([
-                    // Set raffle index
-                    this._updateRaffleIndex({ number: raffle.number + raffleUnits }),
-                    [...new Array(raffleUnits)].map((_value, index) => {
-                        const raffleId = index + raffle.number;
-                        raffleIds.push(raffleId);
-                        return this._createRaffle({ filename: raffleId, data: { user, order, raffleId } });
-                    }),
-                ]);
+                const rafflaUnitsMap = [...new Array(raffleUnits)];
+                const query = /*SQL*/ `
+                    INSERT INTO raffle(order_id)
+                    VALUES ${rafflaUnitsMap.map((_v, index) => `($${index + 1})`)}
+                    RETURNING *`;
+                const values = rafflaUnitsMap.map(() => orderId);
+                const { rows } = await this.pgPool.query(query, values);
+                const raffleIds = rows.map(({ id }) => id);
+                await Promise.all(raffleIds.map(id => this._createRaffle({ filename: id, data: { user, order, raffleId: id } })));
 
                 // Send email
                 await this._sendEmail({ user, order, raffleIds });
 
-                return { raffleUnits, raffle, order, user };
+                return { raffleUnits, order, user, raffleIds };
             } else {
                 throw new Error('Order not approved');
             }
@@ -68,7 +74,8 @@ class RaffleCreateService {
     async _createRaffle({ filename, data }) {
         const mime = 'json';
         const fullFilename = `${filename}.${mime}`;
-        const remotePath = `${this.remoteKey}/year=${this.now.getFullYear()}/month=${this.now.getMonth() + 1}/day=${this.now.getDate()}/${fullFilename}`;
+        const remotePath = `${this.remoteKey}/year=${this.now.getFullYear()}/month=${this.now.getMonth() +
+            1}/day=${this.now.getDate()}/${fullFilename}`;
         const key = this.rifaDatalakeRawFileStorage.createRemotePath(remotePath);
         try {
             const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(fullFilename, data);
@@ -78,27 +85,6 @@ class RaffleCreateService {
             throw error;
         } finally {
             this.rifaDatalakeRawFileStorage.deleteJSONfile(filename);
-        }
-    }
-
-    /**
-     * @private
-     * @description Upload user to s3
-     * @param {Object} options
-     */
-    async _updateRaffleIndex({ number }) {
-        const mime = 'json';
-        const fullFilename = `index.${mime}`;
-        const remotePath = `raffle/${fullFilename}`;
-        const key = this.rifaDatalakeRawFileStorage.createRemotePath(remotePath);
-        try {
-            const filePath = await this.rifaDatalakeRawFileStorage.createJSONFile(fullFilename, { number });
-            return await this.rifaDatalakeRawFileStorage.upload({ filePath, key, mime });
-        } catch (error) {
-            console.error(error);
-            throw error;
-        } finally {
-            this.rifaDatalakeRawFileStorage.deleteJSONfile(fullFilename);
         }
     }
 

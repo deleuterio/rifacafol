@@ -7,6 +7,7 @@ const rifaCafolSuccessEmail = require('../../../../resource/email/ses/RifaCafolS
 const rifaCafolErrorEmail = require('../../../../resource/email/ses/RifaCafolErrorEmail');
 const rafflePaymentSuccessQueue = require('../../../../resource/queue/sqs/RafflePaymentSuccessQueue');
 const rafflePaymentSuccessQueueDLT = require('../../../../resource/queue/sqs/RafflePaymentSuccessQueueDLT');
+const { pgPool } = require('../../../../resource/database/postgres/pg-interface');
 /* Service dependencies end */
 
 
@@ -17,6 +18,7 @@ module.exports = async ({ messageId, body, receiptHandle }) => {
         rifaCafolErrorEmail,
         rafflePaymentSuccessQueue,
         rafflePaymentSuccessQueueDLT,
+        pgPool,
     });
     return await raffleCreateService.execute({ messageId, body, receiptHandle });
 };
