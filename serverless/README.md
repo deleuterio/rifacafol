@@ -16,22 +16,17 @@ $ sudo docker run -it --rm postgres psql -h {{PG_HOST}} -U postgres
 CREATE DATABASE rifacafol_dev;
 CREATE DATABASE rifacafol;
 ```
-4. Create table to manage raffle index:
+4. Create table and roles to manage raffle index:
 ```sql
 \c rifacafol_dev
 CREATE TABLE raffle (id SERIAL PRIMARY KEY, order_id text NOT NULL);
-
-\c rifacafol
-CREATE TABLE raffle (id SERIAL PRIMARY KEY, order_id text NOT NULL);
-```
-4. Create users to only SELECT and INSERT roles:
-```sql
-\c rifacafol_dev
-CREATE ROLE rifacafol_dev WITH LOGIN PASSWORD 'XXX';
+CREATE ROLE rifacafol_dev WITH LOGIN PASSWORD '{{PG_PASS}}';
 GRANT SELECT, INSERT ON raffle TO rifacafol_dev;
 GRANT USAGE ON raffle_id_seq TO rifacafol_dev;
 
 \c rifacafol
-CREATE ROLE rifacafol WITH LOGIN PASSWORD 'XXX';
+CREATE TABLE raffle (id SERIAL PRIMARY KEY, order_id text NOT NULL);
+CREATE ROLE rifacafol WITH LOGIN PASSWORD '{{PG_PASS}}';
 GRANT SELECT, INSERT ON raffle TO rifacafol;
+GRANT USAGE ON raffle_id_seq TO rifacafol;
 ```
