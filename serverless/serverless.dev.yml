@@ -1,4 +1,6 @@
 service: rifacafol-dev
+plugins:
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -16,6 +18,7 @@ provider:
         - "s3:PutObject"
         - "s3:HeadObject"
         - "s3:GetObject"
+        - "s3:ListBucket"
       Resource:
         - "arn:aws:s3:::rifa-datalake-raw-dev"
         - "arn:aws:s3:::rifa-datalake-raw-dev/*"
@@ -29,18 +32,10 @@ provider:
         - "arn:aws:sqs:us-east-1:113779569966:RafflePaymentSuccessDev"
         - "arn:aws:sqs:us-east-1:113779569966:RafflePaymentSuccessDevDLT"
     - Effect: Allow
-      Action: "ses:SendTemplatedEmail"
+      Action:
+        - "ses:SendTemplatedEmail"
+        - "ses:SendRawEmail"
       Resource: "arn:aws:ses:us-east-1:113779569966:identity/*"
-  environment:
-    PAYPAL_CLIENT_ID: AZx6AFHE0PdjD2a9WtPgtDwoQRdmZeKOpgBuQGaxuNVBLXsmidqJrXQ7ssccMyWO8bs5nUOsDKjwdJF-
-    PAYPAL_CLIENT_SECRET: EB7WsOgv7Hvqfv4jgT37dnbO5zqwAevl216YSDPRu06GqH8AEMXG5RjSYnQWHIE_aVMVGkGQ-a1xxN43
-    BUCKET_RIFA_DATALAKE_RAW: rifa-datalake-raw-dev
-    SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDev"
-    SQS_QUEUE_URL_RAFFLE_PAYMENT_SUCCESS_DLT: "https://sqs.us-east-1.amazonaws.com/113779569966/RafflePaymentSuccessDevDLT"
-    SES_EMAIL_SOURCE: rifacafol@gmail.com
-    SES_EMAIL_TEMPLATE_SUCCESS: rifacafol-success-20201115112300
-    SES_EMAIL_TEMPLATE_ERROR: rifacafol-error-20201115112300
-    NODE_ENV: development
 
 functions:
   app:
@@ -58,10 +53,6 @@ functions:
             Fn::GetAtt:
               - RafflePaymentSuccessDev
               - Arn
-  # report:
-  #   handler: index.report
-  #   events:
-  #     - schedule: cron(0 6,20 * * ? *)
 
 resources:
   Resources:
@@ -73,3 +64,7 @@ resources:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: "RafflePaymentSuccessDevDLT"
+
+custom:
+  dotenv:
+    path: ./.env.development
