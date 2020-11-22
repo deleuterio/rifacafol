@@ -5,7 +5,7 @@ class RaffleCreateService {
         rifaCafolErrorEmail,
         rafflePaymentSuccessQueue,
         rafflePaymentSuccessQueueDLT,
-        pgPool,
+        psqlClient,
     }) {
         this.rifaDatalakeRawFileStorage = rifaDatalakeRawFileStorage;
         this.rifaCafolSuccessEmail = rifaCafolSuccessEmail;
@@ -13,7 +13,7 @@ class RaffleCreateService {
         this.rafflePaymentSuccessQueue = rafflePaymentSuccessQueue;
         this.rafflePaymentSuccessQueueDLT = rafflePaymentSuccessQueueDLT;
         this.remoteKey = 'raffle/orders';
-        this.pgPool = pgPool;
+        this.psqlClient = psqlClient;
         this.now = new Date();
     }
     async execute({ messageId, body, receiptHandle }) {
@@ -32,10 +32,10 @@ class RaffleCreateService {
                 const query = /*SQL*/ `
                     INSERT INTO raffle(order_id)
                     VALUES ${rafflaUnitsMap.map((_v, index) => `($${index + 1})`)}
-                    RETURNING *`;
+                    RETURNING id`;
                 const values = rafflaUnitsMap.map(() => orderId);
-                const { rows } = await this.pgPool.query(query, values);
-                const raffleIds = rows.map(({ id }) => id);
+                const raffles = await this.psqlClient.query(query, values);
+                const raffleIds = raffles.map(({ id }) => id);
                 await Promise.all(raffleIds.map(id => this._createRaffle({ filename: id, data: { user, order, raffleId: id } })));
 
                 // Send email

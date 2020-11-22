@@ -7,7 +7,7 @@ const rifaCafolSuccessEmail = require('../../../../resource/email/ses/RifaCafolS
 const rifaCafolErrorEmail = require('../../../../resource/email/ses/RifaCafolErrorEmail');
 const rafflePaymentSuccessQueue = require('../../../../resource/queue/sqs/RafflePaymentSuccessQueue');
 const rafflePaymentSuccessQueueDLT = require('../../../../resource/queue/sqs/RafflePaymentSuccessQueueDLT');
-const { pgPool } = require('../../../../resource/database/postgres/pg-singleton');
+const { psqlClient } = require('../../../../resource/database/postgres/pg-singleton');
 /* Service dependencies end */
 
 
@@ -18,7 +18,7 @@ module.exports = async ({ messageId, body, receiptHandle }) => {
         rifaCafolErrorEmail,
         rafflePaymentSuccessQueue,
         rafflePaymentSuccessQueueDLT,
-        pgPool,
+        psqlClient,
     });
     return await raffleCreateService.execute({ messageId, body, receiptHandle });
 };
