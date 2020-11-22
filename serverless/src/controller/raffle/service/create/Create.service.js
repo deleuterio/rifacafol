@@ -18,30 +18,36 @@ class RaffleCreateService {
     }
     async execute({ messageId, body, receiptHandle }) {
         const { eventType, orderId } = body;
+        console.log('Received event', orderId);
         let [user, order] = [null, null];
 
         try {
             // Get user info
             const payment = await this.rifaDatalakeRawFileStorage.getJSON({ key: `payment/${orderId}.json` });
+            console.log('Get payment on s3');
             user = payment.user;
             order = payment.order;
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
+                console.log('Order approved!');
                 // Get raffle numbers
                 const raffleUnits = Number(order.content.amount.value) / 15;
                 const rafflaUnitsMap = [...new Array(raffleUnits)];
+                console.log('Create raffle units array', rafflaUnitsMap);
                 const query = /*SQL*/ `
                     INSERT INTO raffle(order_id)
                     VALUES ${rafflaUnitsMap.map((_v, index) => `($${index + 1})`)}
                     RETURNING id`;
                 const values = rafflaUnitsMap.map(() => orderId);
                 const raffles = await this.psqlClient.query(query, values);
+                console.log('Raffles Created');
+                console.log(JSON.stringify(raffles));
                 const raffleIds = raffles.map(({ id }) => id);
                 await Promise.all(raffleIds.map(id => this._createRaffle({ filename: id, data: { user, order, raffleId: id } })));
+                console.log('Everything created on s3');
 
                 // Send email
                 await this._sendEmail({ user, order, raffleIds });
-
-                return { raffleUnits, order, user, raffleIds };
+                console.log('Send email');
             } else {
                 throw new Error('Order not approved');
             }
@@ -49,12 +55,14 @@ class RaffleCreateService {
             // Send fail email
             if (user && order) {
                 try {
+                    console.log('Send Error email');
                     await this._sendErrorEmail({ user, order, orderId });
                 } catch (er) {
                     console.error(er);
                 }
             }
             // Send message to dead letter queue
+            console.log('Send to DTL');
             this.rafflePaymentSuccessQueueDLT.send({
                 body: JSON.stringify({ body, error: JSON.stringify(error, Object.getOwnPropertyNames(error)) }),
                 messageId,
@@ -62,6 +70,7 @@ class RaffleCreateService {
             console.error(error);
             throw error;
         } finally {
+            console.log('Delete from queue');
             this.rafflePaymentSuccessQueue.delete({ receiptHandle });
         }
     }
