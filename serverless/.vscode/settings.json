@@ -9,6 +9,16 @@
             "name": "ADMIN - rifacafol",
             "database": "raffle",
             "username": "postgres"
+        },
+        {
+            "previewLimit": 50,
+            "server": "database-rifacafol.ciejd1op1gpq.us-east-1.rds.amazonaws.com",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "DEVELOPMENT - rifacafol_dev",
+            "database": "rifacafol_dev",
+            "username": "rifacafol_dev"
         }
     ]
 }
