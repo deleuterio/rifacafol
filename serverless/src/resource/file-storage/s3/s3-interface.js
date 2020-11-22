@@ -52,30 +52,23 @@ class S3 {
         }
     }
 
-    async get({ key, filePath }) {
-        const file = require('fs').createWriteStream(filePath);
-        await s3.getObject({
-            Bucket: this,bucket,
-            Key: key
-        }).createReadStream().pipe(file);
-
-        s3.getObject(params).createReadStream().pipe(file);
-    }
-
     async getJSON({ key }) {
-        const data = await this.s3.getObject({
-            Bucket: this.bucket,
-            Key: key
-        }).promise();
-        const json = JSON.parse(Buffer.from(data.Body).toString("utf8"));
-        return json;
+        const data = await this.s3
+            .getObject({
+                Bucket: this.bucket,
+                Key: key,
+            })
+            .promise();
+        return JSON.parse(Buffer.from(data.Body).toString('utf8'));
     }
 
     async listObjects({ key }) {
-        return this.s3.listObjects({
-            Bucket: this.bucket,
-            Marker: key
-        }).promise();
+        return this.s3
+            .listObjects({
+                Bucket: this.bucket,
+                Marker: key,
+            })
+            .promise();
     }
 
     createRemotePath(remotePath) {
