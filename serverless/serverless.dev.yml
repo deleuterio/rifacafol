@@ -55,7 +55,7 @@ functions:
       subnetIds:
         - subnet-803b4b8e
         - subnet-132d635e
-    reservedConcurrency: 1
+    timeout: 300 # 5 minutes
     events:
       - sqs:
           batchSize: 1
@@ -80,11 +80,12 @@ package:
     - node_modules/**
     - .env.*
     - .env
+    - lambda/dependencies-layer/**
 
 layers:
   Dependencies:
-    path: ./lambda/dependencies-layer/nodejs
-    description: Entire node_modules dependencies
+    package:
+      artifact: ./lambda/dependencies-layer/nodejs.zip
 
 custom:
   dotenv:
