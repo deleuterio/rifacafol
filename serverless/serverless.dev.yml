@@ -40,11 +40,21 @@ provider:
 functions:
   app:
     handler: index.handler
+    layers:
+      - { Ref: DependenciesLambdaLayer }
     events:
       - http: ANY /
       - http: "ANY {proxy+}"
   raffle-processor:
     handler: index.processor
+    layers:
+      - { Ref: DependenciesLambdaLayer }
+    vpc:
+      securityGroupIds:
+        - sg-c03f2ff3 
+      subnetIds:
+        - subnet-803b4b8e
+        - subnet-132d635e
     reservedConcurrency: 1
     events:
       - sqs:
@@ -64,6 +74,17 @@ resources:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: "RafflePaymentSuccessDevDLT"
+
+package:
+  exclude:
+    - node_modules/**
+    - .env.*
+    - .env
+
+layers:
+  Dependencies:
+    path: ./lambda/dependencies-layer/nodejs
+    description: Entire node_modules dependencies
 
 custom:
   dotenv:
