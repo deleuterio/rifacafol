@@ -50,12 +50,6 @@ functions:
     handler: index.processor
     layers:
       - { Ref: DependenciesLambdaLayer }
-    vpc:
-      securityGroupIds:
-        - sg-c03f2ff3 
-      subnetIds:
-        - subnet-803b4b8e
-        - subnet-132d635e
     events:
       - sqs:
           batchSize: 1
