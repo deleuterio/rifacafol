@@ -20,8 +20,8 @@ provider:
         - "s3:GetObject"
         - "s3:ListBucket"
       Resource:
-        - "arn:aws:s3:::rifa-datalake-raw-prod"
-        - "arn:aws:s3:::rifa-datalake-raw-prod/*"
+        - "arn:aws:s3:::rifa-datalake-raw"
+        - "arn:aws:s3:::rifa-datalake-raw/*"
     - Effect: Allow
       Action:
         - "sqs:DeleteMessage"
