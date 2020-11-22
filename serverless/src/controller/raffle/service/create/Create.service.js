@@ -30,7 +30,9 @@ class RaffleCreateService {
             if (eventType === 'CHECKOUT.ORDER.APPROVED') {
                 console.log('Order approved!');
                 // Get raffle numbers
-                const raffleUnits = Number(order.content.amount.value) / 15;
+                let { value } = order.content.amount;
+                value = value.substr(0, value.indexOf('.'));
+                const raffleUnits = Number(value) / 15;
                 const rafflaUnitsMap = [...new Array(raffleUnits)];
                 console.log('Create raffle units array', rafflaUnitsMap);
                 const query = /*SQL*/ `
